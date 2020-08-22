@@ -1,5 +1,8 @@
 
 var timeLeft = 90;
+var currentQuestion = 0;
+
+var resultTimeout;
 
 var highScoreBtn = document.getElementById('high-scores');
 var startBtn = document.getElementById('start');
@@ -10,7 +13,16 @@ var headerEl = document.getElementById("header")
 var contentContainerEl = document.getElementById("content-container");
 var contentEl = document.getElementById("content");
 
-
+var questions = [
+    { q: "Arrays in JavaScript can be used to store __________.", a1: "numbers and strings", a2: "other arrays", a3: "booleans", a4: "all of the above", c: "button4", },
+    { q: "String values must be enclosed within __________ when being assigned to variables.", a1: "commas", a2: "curly brackets", a3: "quotes", a4: "parenthesis", c: "button3", },
+    { q: "Commonly used data types DO NOT include:", a1: "strings", a2: "booleans", a3: "alerts", a4: "numbers", c: "button3", },
+    { q: "A very useful tool used during development and debugging for printing content to the debugger is:", a1: "JavaScript", a2: "terminal/bash", a3: "for loops", a4: "console.log", c: "button4", },
+    { q: "The condition in an if / else statement is enclosed with __________.", a1: "quotes", a2: "curly brackets", a3: "parenthesis", a4: "square brackets", c: "button3", },
+    { q: "Arrays must be enclosed within __________ when being assigned to variables.", a1: "square brackets", a2: "quotes", a3: "curly brackets", a4: "parenthesis", c: "button1", },
+    { q: "Which of these evaluates to a falsy value?", a1: "0", a2: "null", a3: "undefined", a4: "all of the above", c: "button4", },
+    { q: "In JavaScript, the code that is to be run in a function must be enclosed with __________.", a1: "single quotes", a2: "curly brackets", a3: "parenthesis", a4: "semicolons", c: "button2", },
+];
 
 function printTimeLeft(time) {
     timerEl.textContent = "Time: " + time;
@@ -99,7 +111,7 @@ function createStartScreen() {
     startBtnEl.id = "start";
     startBtnEl.textContent = "Start";
 
-    
+
     contentEl.appendChild(startBtnEl);
 
     startBtn = document.getElementById('start');
@@ -121,7 +133,7 @@ var createQuizElements = function (taskId) {
 
     // create question object
     var questionEl = document.createElement("h1");
-    questionEl.className = "question-text";
+    questionEl.id = "question-text";
     questionEl.textContent = "placeholder for a long string of text to test how this looks on the screen... euaowieu faiwufabvekaufaeaefakueyg auwe a ie alew uflaief ailuweg f";
 
     contentEl.appendChild(questionEl);
@@ -147,7 +159,7 @@ var createQuizElements = function (taskId) {
 
     var questionButton4El = document.createElement("button");
     questionButton4El.className = "answer-button";
-    questionButton4El.id = "button3";
+    questionButton4El.id = "button4";
 
 
     buttonContainerEl.appendChild(questionButton1El);
@@ -158,6 +170,8 @@ var createQuizElements = function (taskId) {
 };
 
 function createGameOverScreen(score) {
+
+    if (score < 0) {score = 0};
 
     // clear contents of the main container
     deleteContent();
@@ -186,7 +200,32 @@ function createGameOverScreen(score) {
 
 }
 
+function displayAnswerResult(answerResult) {
 
+    var answerResultEl = document.getElementById('answer-result');
+    if (answerResultEl) {
+        answerResultEl.textContent = answerResult;
+    }
+    else {
+        answerResultEl = document.createElement("p");
+        answerResultEl.id = "answer-result";
+        answerResultEl.textContent = answerResult;
+
+        mainEl.appendChild(answerResultEl);
+    }
+
+    clearTimeout(resultTimeout);
+
+    resultTimeout = window.setTimeout(function () {
+        answerResultEl.remove();
+    }, 4000);
+
+    
+
+
+
+
+}
 
 
 function createHighScoreScreen() {
@@ -194,7 +233,7 @@ function createHighScoreScreen() {
     //hide header
 
     headerEl.style.visibility = "hidden";
-    
+
 
 
 
@@ -231,10 +270,81 @@ function createHighScoreScreen() {
 
 }
 
+function answerQuestion() {
+    if (event.srcElement.id === questions[currentQuestion].c) {
+        displayAnswerResult("Correct!");
+    }
+    else {
+        timeLeft -= 10
+        displayAnswerResult("Incorrect.");
+    }
+
+    currentQuestion++
+    nextQuestion(currentQuestion)
+
+}
+
+function nextQuestion(questionNumber) {
+
+    questionEl = document.getElementById("question-text")
+    questionButton1El = document.getElementById("button1")
+    questionButton2El = document.getElementById("button2")
+    questionButton3El = document.getElementById("button3")
+    questionButton4El = document.getElementById("button4")
+
+
+    if (questionNumber < questions.length && timeLeft > 0) {
+
+        questionEl.textContent = questions[questionNumber].q;
+        questionButton1El.textContent = questions[questionNumber].a1;
+        questionButton2El.textContent = questions[questionNumber].a2;
+        questionButton3El.textContent = questions[questionNumber].a3;
+        questionButton4El.textContent = questions[questionNumber].a4;
+
+        questionButton1El.onclick = answerQuestion;
+        questionButton2El.onclick = answerQuestion;
+        questionButton3El.onclick = answerQuestion;
+        questionButton4El.onclick = answerQuestion;
+
+
+    }
+    else {
+        createGameOverScreen(timeLeft);
+    }
+}
+
+function startQuiz() {
+    createQuizElements();
+
+
+    nextQuestion(0)
+    // var tempQuestionsArray = questions.slice(0);
+
+    // console.log(questions.length);
+
+
+
+    //     currentQuestion = Math.floor(Math.random()*tempQuestionsArray.length);
+
+    //     console.log("i = " + i);
+    //     console.log("current question is: " + currentQuestion);
+
+    //     // console.log(i);
+    //     console.log(tempQuestionsArray[currentQuestion]);
+
+    //     tempQuestionsArray.splice(currentQuestion,1)
+
+
+
+
+
+
+}
+
 
 
 highScoreBtn.onclick = createHighScoreScreen;
-startBtn.onclick = createQuizElements;
+startBtn.onclick = startQuiz;
 
 
 

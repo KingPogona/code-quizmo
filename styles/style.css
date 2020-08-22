@@ -45,6 +45,17 @@ button:hover {
     border-color: var(--color-2);
 }
 
+h1 {
+    margin-bottom: 20px;
+}
+
+input[type=text] {
+    /* width: 100%; */
+    padding: 8px 20px 3px 20px;
+    margin: 0 0 0 10px;
+    box-sizing: border-box;
+}
+
 #high-scores {
     color: var(--color-2);
     background-color: Transparent;
@@ -71,14 +82,20 @@ button:hover {
 }
 
 .container{
-    margin: auto;
+    margin: 0 auto;
     width: 100%;
     height: 100px;
-    text-align: center;
+    /* text-align: center; */
+}
+
+.game-over {
+    width: fit-content;
+    margin: auto;
 }
   
 .welcome{
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .question{
@@ -91,6 +108,16 @@ button:hover {
     flex-direction: column;
     flex-grow: 1;
     align-items: flex-start;
+}
+
+.hsButton {
+    margin: 10px 5px 0 0;
+}
+
+.scores-container {
+    width: 100%;
+    height: 25px;
+    background-color: var(--color-3);
 }
   
 #main{

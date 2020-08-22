@@ -10,7 +10,7 @@
 
 <body>
 
-    <header>
+    <header id="header">
         <div class="flex-container">
             <button id="high-scores">View High Scores</button>
             <h2 id="countdown">Time: 0</h2>
@@ -19,16 +19,29 @@
 
     <main>
         <div class="container" id="content-container">
-            <div id="welcomeContent">
+            <div class="welcome" id="content">
                 <h1 class="welcome">Coding Quiz Challenge</h1>
 
                 <p class="welcome description">
                     Try to answer the following code related questions within the time limit.
                     <br>
-                    Keep in mind that incorrect answers will result in a 10 seccond time/score penalty.
+                    Keep in mind that incorrect answers will result in a 10 second time/score penalty.
                 </p>
-                <button id="start">Start</button>
+                <button class="welcome" id="start">Start</button>
             </div>
+
+
+
+            
+
+
+            <!-- <div class="temp-test">
+                <form>
+                    <label for="initials">Enter initials: </label>
+                    <input type="text" id="initials-field" name="initials">
+                    <button id="submit">Submit</button>
+                </form>
+            </div> -->
 
             <!-- <h1 class="question"></h1> -->
             <!-- <p id="Question"></p> -->

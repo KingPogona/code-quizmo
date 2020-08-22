@@ -30,7 +30,7 @@ function printTimeLeft(time) {
 
 
 // Timer that counts down from 5
-function countdown() {
+function startTimer() {
 
 
     printTimeLeft(timeLeft);
@@ -48,6 +48,7 @@ function countdown() {
         else if (timeLeft <= 0) {
             printTimeLeft("");
             clearInterval(timeInterval);
+            createGameOverScreen(0);
         }
 
     }, 1000);
@@ -316,28 +317,9 @@ function nextQuestion(questionNumber) {
 function startQuiz() {
     createQuizElements();
 
-
     nextQuestion(0)
-    // var tempQuestionsArray = questions.slice(0);
 
-    // console.log(questions.length);
-
-
-
-    //     currentQuestion = Math.floor(Math.random()*tempQuestionsArray.length);
-
-    //     console.log("i = " + i);
-    //     console.log("current question is: " + currentQuestion);
-
-    //     // console.log(i);
-    //     console.log(tempQuestionsArray[currentQuestion]);
-
-    //     tempQuestionsArray.splice(currentQuestion,1)
-
-
-
-
-
+    startTimer();
 
 }
 

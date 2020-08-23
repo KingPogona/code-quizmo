@@ -59,7 +59,7 @@ function createQuizElements(taskId) {
     // create question object
     var questionEl = document.createElement("h1");
     questionEl.id = "question-text";
-    questionEl.textContent = "placeholder for a long string of text to test how this looks on the screen... euaowieu faiwufabvekaufaeaefakueyg auwe a ie alew uflaief ailuweg f";
+    questionEl.textContent = "If you see this there has been an error. Build better code than this.";
 
     contentEl.appendChild(questionEl);
 

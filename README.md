@@ -11,7 +11,7 @@ This is designed to allow the user to test there knowledge of basic JavaScript.
 * JavaScript
 
 ## Website
----placeholder---
+https://kingpogona.github.io/code-quizmo/
 
 ## Screenshot
 ---placeholder---

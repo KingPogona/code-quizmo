@@ -1,5 +1,7 @@
 
+var timeInterval;
 var timeLeft = 90;
+var roundScore = 0;
 var currentQuestion = 0;
 
 var resultTimeout;
@@ -7,11 +9,13 @@ var resultTimeout;
 var highScoreBtn = document.getElementById('high-scores');
 var startBtn = document.getElementById('start');
 
-var timerEl = document.getElementById('countdown');
-
+var mainEl = document.getElementById("main")
+var timerEl = document.getElementById("countdown");
 var headerEl = document.getElementById("header")
 var contentContainerEl = document.getElementById("content-container");
 var contentEl = document.getElementById("content");
+
+var highScores;
 
 var questions = [
     { q: "Arrays in JavaScript can be used to store __________.", a1: "numbers and strings", a2: "other arrays", a3: "booleans", a4: "all of the above", c: "button4", },
@@ -37,12 +41,12 @@ function startTimer() {
     timeLeft--;
 
     // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
-    var timeInterval = setInterval(function () {
+    timeInterval = setInterval(function () {
 
         if (timeLeft > 0) {
 
             printTimeLeft(timeLeft);
-            console.log(timeLeft);
+            // console.log(timeLeft);
             timeLeft--;
         }
         else if (timeLeft <= 0) {
@@ -55,11 +59,38 @@ function startTimer() {
 }
 
 function getHighScores() {
-
+    highScores = localStorage.getItem('high-scores');
+    highScores = JSON.parse(highScores);
+    // console.log(highScores);
 }
 
-function saveHighScores() {
+function saveHighScores(event) {
+    event.preventDefault();
 
+    getHighScores();
+    var initialsValue = document.getElementById("initials-field").value;
+    var newHighScore = { initials: initialsValue, score: roundScore }
+    if (highScores === null) {
+        highScores = [newHighScore];
+    }
+    else {
+        highScores[highScores.length] = newHighScore;
+    }
+
+    localStorage.setItem("high-scores", JSON.stringify(highScores));
+
+
+    // console.log(initialsValue);
+    // console.log(roundScore);
+    // console.log(highScores);
+    // alert("it worked!");
+
+    createHighScoreScreen();
+}
+
+function clearHighScores() {
+    localStorage.removeItem("high-scores");
+    createHighScoreScreen();
 }
 
 function deleteContent() {
@@ -77,47 +108,10 @@ function newContainer(newClass) {
 }
 
 
-// create start screen
+// go to index.html
 
-function createStartScreen() {
-
-    // make header visable
-    headerEl.style.visibility = "visible";
-
-    // clear contents of the main container
-    deleteContent();
-
-    // make new 'container'
-    newContainer("welcome");
-
-    // create title element
-    var mainTitleEl = document.createElement("h1");
-    mainTitleEl.className = "welcome";
-    mainTitleEl.textContent = "Coding Quiz Challenge";
-
-    contentEl.appendChild(mainTitleEl);
-
-    // create description
-
-    var descriptionEl = document.createElement("p");
-    descriptionEl.className = "welcome description";
-    descriptionEl.innerHTML = "Try to answer the following code related questions within the time limit.<br>Keep in mind that incorrect answers will result in a 10 second time/score penalty.";
-
-    contentEl.appendChild(descriptionEl);
-
-    // create start button
-
-    var startBtnEl = document.createElement("button");
-    startBtnEl.className = "welcome";
-    startBtnEl.id = "start";
-    startBtnEl.textContent = "Start";
-
-
-    contentEl.appendChild(startBtnEl);
-
-    startBtn = document.getElementById('start');
-    startBtn.onclick = createQuizElements;
-
+function goToIndex() {
+    window.location.href = "./index.html"
 };
 
 
@@ -172,7 +166,14 @@ var createQuizElements = function (taskId) {
 
 function createGameOverScreen(score) {
 
-    if (score < 0) {score = 0};
+
+    clearInterval(timeInterval);
+
+    if (score < 0) { score = 0 };
+
+    printTimeLeft(score);
+
+    roundScore = score;
 
     // clear contents of the main container
     deleteContent();
@@ -196,6 +197,9 @@ function createGameOverScreen(score) {
 
     contentEl.appendChild(initialsFormEl)
 
+    var submitBtn = document.getElementById('submit');
+
+    submitBtn.onclick = saveHighScores;
 
 
 
@@ -221,13 +225,33 @@ function displayAnswerResult(answerResult) {
         answerResultEl.remove();
     }, 4000);
 
-    
+
 
 
 
 
 }
 
+function createHighScoreList() {
+    getHighScores();
+
+    if (highScores !== null) {
+        highScores.sort((a, b) => {
+            return b.score - a.score;
+        });
+
+
+        var scoresContainerEl = document.getElementById("scores-container");
+        // scoresContainerEl.textContent = "test";
+        var scoreElstring = "";
+
+        for (var i = 0; i < highScores.length; i++) {
+            scoreElstring += "<p class='score'>" + (i + 1) + ". " + highScores[i].initials + " - " + highScores[i].score + "</p>";
+        }
+
+        scoresContainerEl.innerHTML = scoreElstring;
+    }
+}
 
 function createHighScoreScreen() {
 
@@ -250,11 +274,11 @@ function createHighScoreScreen() {
     contentEl.appendChild(highScoreTitleEl);
 
     var scoresContainerEl = document.createElement("div");
-    scoresContainerEl.className = "scores-container";
+    scoresContainerEl.id = "scores-container";
 
     contentEl.appendChild(scoresContainerEl)
 
-
+    createHighScoreList();
 
 
     var buttonsEl = document.createElement("div");
@@ -266,8 +290,8 @@ function createHighScoreScreen() {
     var goBackBtn = document.getElementById('go-back');
     var clearHighScoresBtn = document.getElementById('clear-high-scores');
 
-    goBackBtn.onclick = createStartScreen;
-    clearHighScoresBtn.onclick = createQuizElements;
+    goBackBtn.onclick = goToIndex;
+    clearHighScoresBtn.onclick = clearHighScores;
 
 }
 
@@ -315,10 +339,10 @@ function nextQuestion(questionNumber) {
 }
 
 function startQuiz() {
+    timeLeft = 90;
+
     createQuizElements();
-
     nextQuestion(0)
-
     startTimer();
 
 }
@@ -327,152 +351,3 @@ function startQuiz() {
 
 highScoreBtn.onclick = createHighScoreScreen;
 startBtn.onclick = startQuiz;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// timer javascript
-
-
-var mainEl = document.getElementById('main');
-
-
-var message =
-    'Congratulations! Now you are prepared to tackle the Challenge this week! Good luck!';
-var words = message.split(' ');
-
-
-
-
-
-
-
-
-
-
-// // create answer buttons
-// var editButtonEl = document.createElement("button");
-// editButtonEl.textContent = "Edit";
-// editButtonEl.className = "btn edit-btn";
-// editButtonEl.setAttribute("data-task-id", taskId);
-
-// actionContainerEl.appendChild(editButtonEl);
-
-// // create delete button
-// var deleteButtonEl = document.createElement("button");
-// deleteButtonEl.textContent = "Delete";
-// deleteButtonEl.className = "btn delete-btn";
-// deleteButtonEl.setAttribute("data-task-id", taskId);
-
-// actionContainerEl.appendChild(deleteButtonEl);
-
-// var statusSelectEl = document.createElement("select");
-// statusSelectEl.className = "select-status";
-// statusSelectEl.setAttribute("name", "status-change");
-// statusSelectEl.setAttribute("data-task-id", taskId);
-
-// actionContainerEl.appendChild(statusSelectEl);
-
-// var statusChoices = ["To Do", "In Progress", "Completed"];
-
-// for (var i = 0; i < statusChoices.length; i++) {
-//     // create option element
-//     var statusOptionEl = document.createElement("option");
-//     statusOptionEl.textContent = statusChoices[i];
-//     statusOptionEl.setAttribute("value", statusChoices[i]);
-
-//     // append to select
-//     statusSelectEl.appendChild(statusOptionEl);
-// }
-
-// return actionContainerEl;
-
-
-
-
-
-
-
-
-// // storage javascript
-
-// var emailInput = document.querySelector("#email");
-// var passwordInput = document.querySelector("#password");
-// var signUpButton = document.querySelector("#sign-up");
-// var msgDiv = document.querySelector("#msg");
-// var userEmailSpan = document.querySelector("#user-email");
-// var userPasswordSpan = document.querySelector("#user-password");
-
-// renderLastRegistered();
-
-// function displayMessage(type, message) {
-//     msgDiv.textContent = message;
-//     msgDiv.setAttribute("class", type);
-// }
-
-// function renderLastRegistered() {
-//     // Fill in code here to retrieve the last email and password.
-//     // If they are null, return early from this function
-//     // Else set the text of the userEmailSpan and userPasswordSpan 
-//     // to the corresponding values form local storgage
-//     if (localStorage.getItem("email") === null ||
-//         localStorage.getItem("password") === null) {
-//         console.log("returned 'NULL'")
-//         return;
-//     }
-//     else {
-//         userEmailSpan.textContent = localStorage.getItem("email");
-//         userPasswordSpan.textContent = localStorage.getItem("password");
-//     }
-// };
-
-// signUpButton.addEventListener("click", function (event) {
-//     event.preventDefault();
-
-//     var email = document.querySelector("#email").value;
-//     var password = document.querySelector("#password").value;
-
-//     if (email === "") {
-//         displayMessage("error", "Email cannot be blank");
-//     } else if (password === "") {
-//         displayMessage("error", "Password cannot be blank");
-//     } else {
-//         displayMessage("success", "Registered successfully");
-
-//         // Save email and password to localStorage and render the last registered.
-//         localStorage.setItem("email", email);
-//         localStorage.setItem("password", password);
-
-//         renderLastRegistered()
-//     }
-// });

@@ -25,12 +25,47 @@ header {
     font-size: 18px;
 }
 
+.timer {
+    margin: 20px;
+    padding: 0px 10px;
+}
+
 main {
     width: 60%;
     margin: 0 auto;
     font-size: 20px;
 }
 
+h1 {
+    margin-bottom: 20px;
+}
+
+.welcome{
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* container styles */
+.container{
+    margin: 0 auto;
+    width: 100%;    
+}
+
+.flex-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+
+    padding: 30px 10%;
+}
+
+.scores-container {
+    width: 100%;
+    height: 25px;
+    background-color: var(--color-3);
+}
+
+/* button styles */
 button {
     font-size: 22px;
     padding: 0px 10px;
@@ -46,65 +81,6 @@ button:hover {
     border-color: var(--color-2);
 }
 
-h1 {
-    margin-bottom: 20px;
-}
-
-input[type=text] {
-    /* width: 100%; */
-    padding: 8px 20px 3px 20px;
-    margin: 0 0 0 10px;
-    box-sizing: border-box;
-}
-
-#high-scores {
-    color: var(--color-2);
-    background-color: Transparent;
-    border: none;
-}
-
-#answer-result {
-    border-width: 1px 0 0 0;
-    border-style: solid;
-    border-color: grey;
-    margin: 20px;
-    padding: 20px 50px;
-    text-align: left;
-    color: grey;
-    font-style: italic;
-}
-
-.flex-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-
-    padding: 30px 10%;
-}
-
-.container{
-    margin: 0 auto;
-    width: 100%;
-    /* height: 100px; */
-    /* text-align: center; */
-    
-}
-
-.game-over {
-    width: fit-content;
-    margin: auto;
-}
-  
-.welcome{
-    margin-bottom: 20px;
-    text-align: center;
-}
-
-.question{
-    margin-bottom: 20px;
-    font-size: 35px;
-}
-
 .button-container {
     display: flex;
     flex-direction: column;
@@ -116,10 +92,11 @@ input[type=text] {
     margin: 10px 5px 0 0;
 }
 
-.scores-container {
-    width: 100%;
-    height: 25px;
-    background-color: var(--color-3);
+/* score styles */
+#high-scores {
+    color: var(--color-2);
+    background-color: Transparent;
+    border: none;
 }
 
 .score {
@@ -130,10 +107,132 @@ input[type=text] {
 .score:nth-of-type(even) {
     background-color: var(--color-4);
 }
-  
-#read{
+
+/* input field style */
+input[type=text] {
+    /* width: 100%; */
+    padding: 8px 20px 3px 20px;
+    margin: 0 0 0 10px;
+    box-sizing: border-box;
+}
+
+/* styling used for the question text */
+.question{
+    margin-bottom: 20px;
+    font-size: 35px;
+}
+
+/* styling used on screen after completing quiz */
+.game-over {
+    width: fit-content;
     margin: auto;
-    padding: 10px;
-    width:100%;
-    height: 25px;
+}
+
+/* styling for correct/incorrect as it appears at the bottom of the screen */
+#answer-result {
+    border-width: 1px 0 0 0;
+    border-style: solid;
+    border-color: grey;
+    margin: 20px;
+    padding: 20px 50px;
+    text-align: left;
+    color: grey;
+    font-style: italic;
+}
+
+
+/* MEDIA QUERY FOR SMALLER DESKTOP SCREENS AND SMALLER */
+@media screen and (max-width: 1024px) {
+    main {
+        width: 70%;
+        margin: 0 auto;
+        font-size: 20px;
+    }
+}
+  
+  /* MEDIA QUERY FOR TABLETS AND SMALLER */
+@media screen and (max-width: 768px) {
+
+}
+  
+  /* MEDIA QUERY FOR MOBILE PHONES AND SMALLER */
+@media screen and (max-width: 575px) {
+
+    main {
+        width: 80%;
+        margin: 0 auto;
+        font-size: 20px;
+    }
+
+    .container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    
+        /* padding: 30px 10%; */
+    }
+
+    .flex-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    
+        padding: 30px 10%;
+    }
+
+    .button-container {
+        display: flex;
+        flex-direction: column;
+        /* flex-grow: 1; */
+        align-items: center;
+    }
+
+    button {
+        font-size: 22px;
+        padding: 0px 10px;
+        color: white;
+        background-color: var(--color-1);
+        border-color: var(--color-1);
+        border-radius: 5px;
+        margin: 20px;
+        min-height: 50px;
+        width: 90%;
+    }
+
+    #question-text {
+        font-size: 35px;
+    }
+
+    .game-over {
+        margin: 0 auto;
+        text-align: center;
+    }
+
+    #final-score {
+        padding-bottom: 10px;
+    }
+
+    #scores-container {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .high-scores {
+        margin: 0 auto;
+        position: absolute;
+        top: 5vh;
+        /* display: flex;
+        align-items: center;
+        flex-direction: column; */
+    }
+
+    .hsButton-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    #answer-result {
+        text-align: center;
+    }
 }

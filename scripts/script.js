@@ -1,4 +1,4 @@
-
+// ------------variables------------
 var timeInterval;
 var timeLeft = 90;
 var roundScore = 0;
@@ -30,76 +30,13 @@ var questions = [
 var shuffledQuestions;
 
 
-
-function printTimeLeft(time) {
-    timerEl.textContent = "Time: " + time;
-}
+// ---------------functions--------------------
 
 
-// Timer that counts down from 5
-function startTimer() {
+//     ------page layout functions------
 
-
-    printTimeLeft(timeLeft);
-    timeLeft--;
-
-    // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
-    timeInterval = setInterval(function () {
-
-        if (timeLeft > 0) {
-
-            printTimeLeft(timeLeft);
-            // console.log(timeLeft);
-            timeLeft--;
-        }
-        else if (timeLeft <= 0) {
-            printTimeLeft("");
-            clearInterval(timeInterval);
-            createGameOverScreen(0);
-        }
-
-    }, 1000);
-}
-
-function getHighScores() {
-    highScores = localStorage.getItem('high-scores');
-    highScores = JSON.parse(highScores);
-    // console.log(highScores);
-}
-
-function saveHighScores(event) {
-    event.preventDefault();
-
-    getHighScores();
-    var initialsValue = document.getElementById("initials-field").value;
-    var newHighScore = { initials: initialsValue, score: roundScore }
-    if (highScores === null) {
-        highScores = [newHighScore];
-    }
-    else {
-        highScores[highScores.length] = newHighScore;
-    }
-
-    localStorage.setItem("high-scores", JSON.stringify(highScores));
-
-
-    // console.log(initialsValue);
-    // console.log(roundScore);
-    // console.log(highScores);
-    // alert("it worked!");
-
-    createHighScoreScreen();
-}
-
-function clearHighScores() {
-    localStorage.removeItem("high-scores");
-    createHighScoreScreen();
-}
-
-function deleteContent() {
-    contentEl.remove();
-}
-
+// creates container that other elements are put into
+// this is also what is removed by deleteContent
 function newContainer(newClass) {
 
     contentEl = document.createElement("div");
@@ -110,18 +47,8 @@ function newContainer(newClass) {
 
 }
 
-
-// go to index.html
-
-function goToIndex() {
-    window.location.href = "./index.html"
-};
-
-
-
 // create quiz elements
-
-var createQuizElements = function (taskId) {
+function createQuizElements(taskId) {
 
     // clear contents of the main container
     deleteContent();
@@ -190,6 +117,7 @@ function createGameOverScreen(score) {
     contentEl.appendChild(allDoneEl);
 
     var finalScoreEl = document.createElement("p");
+    finalScoreEl.id = "final-score";
     finalScoreEl.textContent = "Your final score is " + score + ".";
 
     contentEl.appendChild(finalScoreEl)
@@ -206,54 +134,6 @@ function createGameOverScreen(score) {
 
 
 
-}
-
-function displayAnswerResult(answerResult) {
-
-    var answerResultEl = document.getElementById('answer-result');
-    if (answerResultEl) {
-        answerResultEl.textContent = answerResult;
-    }
-    else {
-        answerResultEl = document.createElement("p");
-        answerResultEl.id = "answer-result";
-        answerResultEl.textContent = answerResult;
-
-        mainEl.appendChild(answerResultEl);
-    }
-
-    clearTimeout(resultTimeout);
-
-    resultTimeout = window.setTimeout(function () {
-        answerResultEl.remove();
-    }, 4000);
-
-
-
-
-
-
-}
-
-function createHighScoreList() {
-    getHighScores();
-
-    if (highScores !== null) {
-        highScores.sort((a, b) => {
-            return b.score - a.score;
-        });
-
-
-        var scoresContainerEl = document.getElementById("scores-container");
-        // scoresContainerEl.textContent = "test";
-        var scoreElstring = "";
-
-        for (var i = 0; i < highScores.length; i++) {
-            scoreElstring += "<p class='score'>" + (i + 1) + ". " + highScores[i].initials + " - " + highScores[i].score + "</p>";
-        }
-
-        scoresContainerEl.innerHTML = scoreElstring;
-    }
 }
 
 function createHighScoreScreen() {
@@ -285,6 +165,7 @@ function createHighScoreScreen() {
 
 
     var buttonsEl = document.createElement("div");
+    buttonsEl.className = "hsButton-container"
     // initialsFormEl.className = "flex-container";
     buttonsEl.innerHTML = "<button class='hsButton' id='go-back'>Go back</button><button class='hsButton' id='clear-high-scores'>Clear high scores</button>";
 
@@ -298,20 +179,126 @@ function createHighScoreScreen() {
 
 }
 
-function answerQuestion() {
-    if (event.srcElement.id === shuffledQuestions[currentQuestion].c) {
-        displayAnswerResult("Correct!");
-    }
-    else {
-        timeLeft -= 10
-        displayAnswerResult("Incorrect.");
-    }
+function createHighScoreList() {
+    getHighScores();
 
-    currentQuestion++
-    nextQuestion(currentQuestion)
+    if (highScores !== null) {
+        highScores.sort((a, b) => {
+            return b.score - a.score;
+        });
 
+
+        var scoresContainerEl = document.getElementById("scores-container");
+        // scoresContainerEl.textContent = "test";
+        var scoreElstring = "";
+
+        for (var i = 0; i < highScores.length; i++) {
+            scoreElstring += "<p class='score'>" + (i + 1) + ". " + highScores[i].initials + " - " + highScores[i].score + "</p>";
+        }
+
+        scoresContainerEl.innerHTML = scoreElstring;
+    }
 }
 
+// removes content from within main to allow change of page elements
+function deleteContent() {
+    contentEl.remove();
+}
+
+// go to index.html when go back button is clicked in high score page
+function goToIndex() {
+    window.location.href = "./index.html"
+};
+
+
+//      ------ timer functions ------
+
+// Starts and increments the timer
+function startTimer() {
+
+
+    printTimeLeft(timeLeft);
+    timeLeft--;
+
+    // Use the `setInterval()` method to call a function to be executed every 1000 milliseconds
+    timeInterval = setInterval(function () {
+
+        if (timeLeft > 0) {
+
+            printTimeLeft(timeLeft);
+            // console.log(timeLeft);
+            timeLeft--;
+        }
+        else if (timeLeft <= 0) {
+            printTimeLeft("");
+            clearInterval(timeInterval);
+            createGameOverScreen(0);
+        }
+
+    }, 1000);
+}
+
+// prints the time on the screen
+function printTimeLeft(time) {
+    timerEl.textContent = "Time: " + time;
+}
+
+
+//      ------save/get/clear score data------
+
+function getHighScores() {
+    highScores = localStorage.getItem('high-scores');
+    highScores = JSON.parse(highScores);
+    // console.log(highScores);
+}
+
+function saveHighScores(event) {
+    event.preventDefault();
+
+    getHighScores();
+    var initialsValue = document.getElementById("initials-field").value;
+    var newHighScore = { initials: initialsValue, score: roundScore }
+    if (highScores === null) {
+        highScores = [newHighScore];
+    }
+    else {
+        highScores[highScores.length] = newHighScore;
+    }
+
+    localStorage.setItem("high-scores", JSON.stringify(highScores));
+
+
+    // console.log(initialsValue);
+    // console.log(roundScore);
+    // console.log(highScores);
+    // alert("it worked!");
+
+    createHighScoreScreen();
+}
+
+function clearHighScores() {
+    localStorage.removeItem("high-scores");
+    createHighScoreScreen();
+}
+
+
+//      ------quiz functions------
+
+// shuffle questions for quiz
+function shuffle(a) {
+    // I found and am using Fisher-Yates shuffle algorithm as it is far better than my method
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
+}
+
+// handles placing relevent text for questions and buttons
+// also sets up button handlers for calling answerQuestion()
 function nextQuestion(questionNumber) {
 
     questionEl = document.getElementById("question-text")
@@ -341,6 +328,54 @@ function nextQuestion(questionNumber) {
     }
 }
 
+// handles button inputs and decides if answers are correct or not
+// calls displayAnswerResult() to put feedback on screen
+// then calls nextQuestion() to continue quiz
+function answerQuestion() {
+    if (event.srcElement.id === shuffledQuestions[currentQuestion].c) {
+        displayAnswerResult("Correct!");
+    }
+    else {
+        timeLeft -= 10
+        displayAnswerResult("Incorrect.");
+    }
+
+    currentQuestion++
+    nextQuestion(currentQuestion)
+
+}
+
+// displays correct or incorrect at bottom of screen for 4 seconds
+function displayAnswerResult(answerResult) {
+
+    var answerResultEl = document.getElementById('answer-result');
+    if (answerResultEl) {
+        answerResultEl.textContent = answerResult;
+    }
+    else {
+        answerResultEl = document.createElement("p");
+        answerResultEl.id = "answer-result";
+        answerResultEl.textContent = answerResult;
+
+        mainEl.appendChild(answerResultEl);
+    }
+
+    clearTimeout(resultTimeout);
+
+    resultTimeout = window.setTimeout(function () {
+        answerResultEl.remove();
+    }, 4000);
+
+
+
+
+
+
+}
+
+
+
+// starts the quiz and sets variables when startBtn is clicked
 function startQuiz() {
     timeLeft = 90;
     shuffledQuestions = questions.slice(0)
@@ -353,19 +388,6 @@ function startQuiz() {
     startTimer();
 
 }
-
-// I found and am using Fisher-Yates shuffle algorithm as it is far better than my method
-function shuffle(a) {
-    var j, x, i;
-    for (i = a.length - 1; i > 0; i--) {
-        j = Math.floor(Math.random() * (i + 1));
-        x = a[i];
-        a[i] = a[j];
-        a[j] = x;
-    }
-    return a;
-}
-
 
 
 highScoreBtn.onclick = createHighScoreScreen;

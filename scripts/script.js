@@ -27,6 +27,9 @@ var questions = [
     { q: "Which of these evaluates to a falsy value?", a1: "0", a2: "null", a3: "undefined", a4: "all of the above", c: "button4", },
     { q: "In JavaScript, the code that is to be run in a function must be enclosed with __________.", a1: "single quotes", a2: "curly brackets", a3: "parenthesis", a4: "semicolons", c: "button2", },
 ];
+var shuffledQuestions;
+
+
 
 function printTimeLeft(time) {
     timerEl.textContent = "Time: " + time;
@@ -296,7 +299,7 @@ function createHighScoreScreen() {
 }
 
 function answerQuestion() {
-    if (event.srcElement.id === questions[currentQuestion].c) {
+    if (event.srcElement.id === shuffledQuestions[currentQuestion].c) {
         displayAnswerResult("Correct!");
     }
     else {
@@ -318,13 +321,13 @@ function nextQuestion(questionNumber) {
     questionButton4El = document.getElementById("button4")
 
 
-    if (questionNumber < questions.length && timeLeft > 0) {
+    if (questionNumber < shuffledQuestions.length && timeLeft > 0) {
 
-        questionEl.textContent = questions[questionNumber].q;
-        questionButton1El.textContent = questions[questionNumber].a1;
-        questionButton2El.textContent = questions[questionNumber].a2;
-        questionButton3El.textContent = questions[questionNumber].a3;
-        questionButton4El.textContent = questions[questionNumber].a4;
+        questionEl.textContent = shuffledQuestions[questionNumber].q;
+        questionButton1El.textContent = shuffledQuestions[questionNumber].a1;
+        questionButton2El.textContent = shuffledQuestions[questionNumber].a2;
+        questionButton3El.textContent = shuffledQuestions[questionNumber].a3;
+        questionButton4El.textContent = shuffledQuestions[questionNumber].a4;
 
         questionButton1El.onclick = answerQuestion;
         questionButton2El.onclick = answerQuestion;
@@ -340,11 +343,27 @@ function nextQuestion(questionNumber) {
 
 function startQuiz() {
     timeLeft = 90;
+    shuffledQuestions = questions.slice(0)
+    shuffledQuestions = shuffle(shuffledQuestions)
+
+    console.log(shuffledQuestions);
 
     createQuizElements();
     nextQuestion(0)
     startTimer();
 
+}
+
+// I found and am using Fisher-Yates shuffle algorithm as it is far better than my method
+function shuffle(a) {
+    var j, x, i;
+    for (i = a.length - 1; i > 0; i--) {
+        j = Math.floor(Math.random() * (i + 1));
+        x = a[i];
+        a[i] = a[j];
+        a[j] = x;
+    }
+    return a;
 }
 
 
